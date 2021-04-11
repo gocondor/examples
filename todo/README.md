@@ -1,5 +1,5 @@
 # Todo example app
-This a todo API example using [GoCondor framework](https://gocondor.github.io)
+This is a todo API example using [GoCondor framework](https://gocondor.github.io)
 
 ## Routes 
 Routes are located in `http/routes.go`
