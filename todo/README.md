@@ -1,5 +1,5 @@
 # Todo example app
-This a todo API example using [GoCondor framework](gocondor.github.io)
+This a todo API example using [GoCondor framework](https://gocondor.github.io)
 
 ## Routes 
 Routes are located in `http/routes.go`
@@ -12,7 +12,7 @@ Routes are located in `http/routes.go`
 ```
 
 # Running the app 
-First add your database `mysql` connection information to the `.env` file, then start the app by running the following command 
+First clone the `examples` repository, next `cd` into the todo app and add your database `mysql` connection information to the `.env` file, then start the app by running the following command 
 ```bash
 go run main.go
 ```
