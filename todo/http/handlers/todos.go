@@ -23,10 +23,9 @@ func TodosList(c *gin.Context) {
 	result := db.Find(&todos)
 	// Handle error
 	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "something went wrong",
 		})
-		c.AbortWithError(http.StatusInternalServerError, result.Error)
 		return
 	}
 
@@ -45,7 +44,7 @@ func TodosCreate(c *gin.Context) {
 	err := c.ShouldBind(&todo)
 	// Handle error
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"message": err.Error(),
 		})
 		return
@@ -55,10 +54,9 @@ func TodosCreate(c *gin.Context) {
 	result := db.Create(&todo)
 	// Handle Error
 	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "something went wrong",
 		})
-		c.AbortWithError(http.StatusInternalServerError, result.Error)
 		return
 	}
 
@@ -78,10 +76,9 @@ func TodosShow(c *gin.Context) {
 	result := db.First(&todo, id)
 	// Handle error
 	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"message": result.Error.Error(),
 		})
-		c.AbortWithError(http.StatusInternalServerError, result.Error)
 		return
 	}
 
@@ -101,10 +98,9 @@ func TodosDelete(c *gin.Context) {
 	result := db.Delete(&todo, id)
 	// Handle error
 	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": result.Error.Error(),
 		})
-		c.AbortWithError(http.StatusInternalServerError, result.Error)
 		return
 	}
 
