@@ -7,6 +7,7 @@ package http
 import (
 	"github.com/gocondor/core/routing"
 	"github.com/gocondor/examples/authentication/http/handlers"
+	. "github.com/gocondor/examples/authentication/http/middlewares"
 )
 
 // RegisterRoutes to register your routes
@@ -14,6 +15,8 @@ func RegisterRoutes() {
 	router := routing.Resolve()
 
 	//Define your routes here
-	router.Get("/", handlers.HomeShow)
+	router.Get("/", Auth, handlers.HomeShow)
 	router.Post("/signup", handlers.UsersSignup)
+	router.Post("/signin", handlers.UsersSignin)
+	router.Get("/signout", handlers.UsersSignout)
 }

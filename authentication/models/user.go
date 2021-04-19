@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// User is an example model
 type User struct {
 	gorm.Model
 	Name     string `form:"name" json:"name" binding:"required"`
