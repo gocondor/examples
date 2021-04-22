@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gocondor/core"
 	"github.com/gocondor/core/cache"
-	"github.com/gocondor/core/jwtloader"
 	"github.com/gocondor/examples/authentication/http/input"
 	"github.com/gocondor/examples/authentication/models"
 	"golang.org/x/crypto/bcrypt"
@@ -67,8 +66,6 @@ func UsersSignup(c *gin.Context) {
 func UsersSignin(c *gin.Context) {
 	// Get the database var from context
 	db := c.MustGet(core.GORM).(*gorm.DB)
-	// Get the jwt variable from context
-	jwt := c.MustGet(core.JWT).(*jwtloader.JwtLoader)
 	// Get the cache variable from context
 	cache := c.MustGet(core.CACHE).(*cache.CacheEngine)
 
@@ -110,7 +107,7 @@ func UsersSignin(c *gin.Context) {
 		"userId": strconv.FormatUint(uint64(user.ID), 10),
 	}
 	// generate the jwt token
-	token, err := jwt.CreateToken(tokenPayload)
+	token, err := JWT.CreateToken(tokenPayload)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "something went wrong",
@@ -126,7 +123,7 @@ func UsersSignin(c *gin.Context) {
 		"userId": strconv.FormatUint(uint64(user.ID), 10),
 	}
 	// generate the token
-	refreshToken, err := jwt.CreateRefreshToken(refreshTokenPayload)
+	refreshToken, err := JWT.CreateRefreshToken(refreshTokenPayload)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "something went wrong",
@@ -145,11 +142,10 @@ func UsersSignin(c *gin.Context) {
 }
 
 func UsersSignout(c *gin.Context) {
-	jwt := c.MustGet(core.JWT).(*jwtloader.JwtLoader)
 	cache := c.MustGet(core.CACHE).(*cache.CacheEngine)
 
 	// extract the token
-	token, err := jwt.ExtractToken(c)
+	token, err := JWT.ExtractToken(c)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "bad request data",
@@ -157,7 +153,7 @@ func UsersSignout(c *gin.Context) {
 		return
 	}
 	// decode the token
-	payload, err := jwt.DecodeToken(token)
+	payload, err := JWT.DecodeToken(token)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": "bad request data",

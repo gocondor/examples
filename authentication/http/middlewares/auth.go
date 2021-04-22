@@ -13,15 +13,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gocondor/core"
 	"github.com/gocondor/core/cache"
-	"github.com/gocondor/core/jwtloader"
+	"github.com/gocondor/core/jwt"
 	"github.com/gocondor/examples/authentication/models"
 	"gorm.io/gorm"
 )
 
 // MiddlewareExample is an example of a middleware gets executed before the request handler
 var Auth gin.HandlerFunc = func(c *gin.Context) {
-	// Get the jwt loader variable from context
-	jwt := c.MustGet(core.JWT).(*jwtloader.JwtLoader)
 	// Get the cache variable from context
 	cache := c.MustGet(core.CACHE).(*cache.CacheEngine)
 	// Get the db variable from context
