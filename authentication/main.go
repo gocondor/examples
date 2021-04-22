@@ -9,15 +9,11 @@ import (
 	"os"
 
 	"github.com/gocondor/core"
-	"github.com/gocondor/core/cache"
-	"github.com/gocondor/core/database"
-	"github.com/gocondor/core/jwtloader"
-	"github.com/gocondor/core/pkgintegrator"
-	"github.com/gocondor/examples/authentication/config"
-	"github.com/gocondor/examples/authentication/http"
-	"github.com/gocondor/examples/authentication/http/middlewares"
-	"github.com/gocondor/examples/authentication/integrations"
-	"github.com/gocondor/examples/authentication/models"
+	"github.com/harranali/examples/authentication/config"
+	"github.com/harranali/examples/authentication/http"
+	"github.com/harranali/examples/authentication/http/handlers"
+	"github.com/harranali/examples/authentication/http/middlewares"
+	"github.com/harranali/examples/authentication/models"
 	"github.com/joho/godotenv"
 )
 
@@ -41,24 +37,11 @@ func main() {
 	// initialize core packages
 	app.Bootstrap()
 
-	// register the jwt
-	pkgintegrator.Resolve().Integrate(core.RegisterJwt(jwtloader.Resolve()))
-
-	//register database driver
-	if app.Features.Database == true {
-		pkgintegrator.Resolve().Integrate(core.GORMIntegrator(database.Resolve()))
-	}
-
-	//register the cache
-	if app.Features.Cache == true {
-		pkgintegrator.Resolve().Integrate(core.Cache(cache.Resolve()))
-	}
-
-	// Register packages integrations
-	integrations.RegisterPKGIntegrations()
-
 	// Register global middlewares
 	middlewares.RegisterMiddlewares()
+
+	// initiate handlers dependancies
+	handlers.InitiateHandlersDependencies()
 
 	// Register routes
 	http.RegisterRoutes()
