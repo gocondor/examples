@@ -43,7 +43,7 @@ func main() {
 	// initiate handlers dependancies
 	handlers.InitiateHandlersDependencies()
 
-	// initiate handlers dependancies
+	// initiate middlewares dependancies
 	middlewares.InitiateMiddlewaresDependencies()
 
 	// Register routes

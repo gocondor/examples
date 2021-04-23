@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// HomeShow to show home page
+// HomeGet to get home page
 func HomeGet(c *gin.Context) {
 
 	c.JSON(200, gin.H{

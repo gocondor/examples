@@ -9,14 +9,10 @@ import (
 	"os"
 
 	"github.com/gocondor/core"
-	"github.com/gocondor/core/cache"
-	"github.com/gocondor/core/database"
-	"github.com/gocondor/core/jwtloader"
-	"github.com/gocondor/core/pkgintegrator"
 	"github.com/gocondor/examples/todo/config"
 	"github.com/gocondor/examples/todo/http"
+	"github.com/gocondor/examples/todo/http/handlers"
 	"github.com/gocondor/examples/todo/http/middlewares"
-	"github.com/gocondor/examples/todo/integrations"
 	"github.com/gocondor/examples/todo/models"
 	"github.com/joho/godotenv"
 )
@@ -41,24 +37,11 @@ func main() {
 	// initialize core packages
 	app.Bootstrap()
 
-	// register the jwt
-	pkgintegrator.Resolve().Integrate(core.RegisterJwt(jwtloader.Resolve()))
-
-	//register database driver
-	if app.Features.Database == true {
-		pkgintegrator.Resolve().Integrate(core.GORMIntegrator(database.Resolve()))
-	}
-
-	//register the cache
-	if app.Features.Cache == true {
-		pkgintegrator.Resolve().Integrate(core.Cache(cache.Resolve()))
-	}
-
-	// Register packages integrations
-	integrations.RegisterPKGIntegrations()
-
 	// Register global middlewares
 	middlewares.RegisterMiddlewares()
+
+	// initiate handlers dependancies
+	handlers.InitiateHandlersDependencies()
 
 	// Register routes
 	http.RegisterRoutes()
