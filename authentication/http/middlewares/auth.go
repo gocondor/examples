@@ -40,10 +40,10 @@ var Auth gin.HandlerFunc = func(c *gin.Context) {
 		})
 		return
 	}
-
 	// check if user has a record in redis
 	tokenRedisKey := fmt.Sprintf("%s-token", payload["userId"])
 	res, err := Cache.Get(tokenRedisKey)
+
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "unauthorized",

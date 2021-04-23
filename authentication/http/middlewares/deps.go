@@ -16,8 +16,8 @@ var (
 	JWT *jwt.JWTUtil
 )
 
-// InitiateHandlersDependencies to initiate the any dependency of the handlers
-func InitiateHandlersDependencies() {
+// InitiateMiddlewaresDependencies to initiate the any dependency of the handlers
+func InitiateMiddlewaresDependencies() {
 	DB = database.Resolve()
 	Cache = cache.Resolve()
 	JWT = jwt.Resolve()
