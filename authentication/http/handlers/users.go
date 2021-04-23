@@ -1,7 +1,3 @@
-// Copyright 2021 Harran Ali <harran.m@gmail.com>. All rights reserved.
-// Use of this source code is governed by MIT-style
-// license that can be found in the LICENSE file.
-
 package handlers
 
 import (
@@ -11,8 +7,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gocondor/core"
-	"github.com/gocondor/core/cache"
 	"github.com/gocondor/examples/authentication/http/input"
 	"github.com/gocondor/examples/authentication/models"
 	"golang.org/x/crypto/bcrypt"
@@ -21,8 +15,6 @@ import (
 
 // UsersSignup to create new accounts
 func UsersSignup(c *gin.Context) {
-	// grab the db variable
-	db := c.MustGet(core.GORM).(*gorm.DB)
 	// bind the input to the user's model
 	var user models.User
 	if err := c.ShouldBind(&user); err != nil {
@@ -32,7 +24,7 @@ func UsersSignup(c *gin.Context) {
 		return
 	}
 	// check if there is a record with the given email
-	res := db.Where("email = ?", user.Email).First(&models.User{})
+	res := DB.Where("email = ?", user.Email).First(&models.User{})
 	if res.Error == nil {
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "user already signed up",
@@ -50,7 +42,7 @@ func UsersSignup(c *gin.Context) {
 	//use the hashed password
 	user.Password = hahsedPWD
 	// create the db record
-	res = db.Create(&user)
+	res = DB.Create(&user)
 	if res.Error != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": res.Error.Error(),
@@ -64,11 +56,6 @@ func UsersSignup(c *gin.Context) {
 }
 
 func UsersSignin(c *gin.Context) {
-	// Get the database var from context
-	db := c.MustGet(core.GORM).(*gorm.DB)
-	// Get the cache variable from context
-	cache := c.MustGet(core.CACHE).(*cache.CacheEngine)
-
 	// validate and bind user input
 	var signinData input.SigninData
 	if err := c.ShouldBind(&signinData); err != nil {
@@ -78,7 +65,7 @@ func UsersSignin(c *gin.Context) {
 	}
 	// get the user record by email from db
 	var user models.User
-	result := db.Where("email = ?", signinData.Email).First(&user)
+	result := DB.Where("email = ?", signinData.Email).First(&user)
 	// check if the record not found
 	if result.Error != nil && errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
@@ -116,7 +103,7 @@ func UsersSignin(c *gin.Context) {
 
 	// store the token in redis
 	tokenRedisKey := fmt.Sprintf("%s-token", tokenPayload["userId"])
-	cache.Set(tokenRedisKey, strconv.FormatUint(uint64(user.ID), 10))
+	Cache.Set(tokenRedisKey, strconv.FormatUint(uint64(user.ID), 10))
 
 	// prepare the refresh token payload
 	refreshTokenPayload := map[string]string{
@@ -131,7 +118,7 @@ func UsersSignin(c *gin.Context) {
 	}
 	// store the refresh token in redis
 	refreshRedisKey := fmt.Sprintf("%s-refresh", refreshTokenPayload["userId"])
-	cache.Set(refreshRedisKey, strconv.FormatUint(uint64(user.ID), 10))
+	Cache.Set(refreshRedisKey, strconv.FormatUint(uint64(user.ID), 10))
 	// render response
 	c.JSON(http.StatusOK, gin.H{
 		"data": map[string]string{
@@ -142,8 +129,6 @@ func UsersSignin(c *gin.Context) {
 }
 
 func UsersSignout(c *gin.Context) {
-	cache := c.MustGet(core.CACHE).(*cache.CacheEngine)
-
 	// extract the token
 	token, err := JWT.ExtractToken(c)
 	if err != nil {
@@ -163,7 +148,7 @@ func UsersSignout(c *gin.Context) {
 
 	// delete the token redis entry
 	tokenRedisKey := fmt.Sprintf("%s-token", payload["userId"])
-	err = cache.Delete(tokenRedisKey)
+	err = Cache.Delete(tokenRedisKey)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "something went wrong",
@@ -172,7 +157,7 @@ func UsersSignout(c *gin.Context) {
 	}
 	// delete the refresh token redis entry
 	refreshRedisKey := fmt.Sprintf("%s-refresh", payload["userId"])
-	err = cache.Delete(refreshRedisKey)
+	err = Cache.Delete(refreshRedisKey)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": "something went wrong",

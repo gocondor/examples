@@ -9,11 +9,11 @@ import (
 	"os"
 
 	"github.com/gocondor/core"
-	"github.com/harranali/examples/authentication/config"
-	"github.com/harranali/examples/authentication/http"
-	"github.com/harranali/examples/authentication/http/handlers"
-	"github.com/harranali/examples/authentication/http/middlewares"
-	"github.com/harranali/examples/authentication/models"
+	"github.com/gocondor/examples/authentication/config"
+	"github.com/gocondor/examples/authentication/http"
+	"github.com/gocondor/examples/authentication/http/handlers"
+	"github.com/gocondor/examples/authentication/http/middlewares"
+	"github.com/gocondor/examples/authentication/models"
 	"github.com/joho/godotenv"
 )
 

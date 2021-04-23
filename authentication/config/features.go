@@ -11,6 +11,6 @@ import (
 // Features helps you decide what features of the framework to use
 var Features *core.Features = &core.Features{
 	Database: true,
-	Cache:    false,
+	Cache:    true,
 	GRPC:     false,
 }
