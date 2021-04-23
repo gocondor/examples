@@ -3,8 +3,8 @@ module github.com/gocondor/examples/authentication
 replace (
 	github.com/gocondor/examples/authentication/config => ./config
 	github.com/gocondor/examples/authentication/http => ./http
-	github.com/gocondor/examples/authentication/http/handlers => ./http/handlers
 	github.com/gocondor/examples/authentication/http/middlewares => ./http/middlewares
+	github.com/gocondor/examples/authentication/http/handlers => ./http/handlers
 	github.com/gocondor/examples/authentication/models => ./models
 )
 
