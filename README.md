@@ -11,12 +11,3 @@ A todo api with the below routes:
 	router.Get("/todos/:id", handlers.TodosShow)
 	router.Delete("/todos/:id", handlers.TodosDelete)
 ```
-
-### 2- Authentication
-A registration an authentication api with the following routes: 
-```go
-	router.Get("/", Auth, handlers.HomeShow)
-	router.Post("/signup", handlers.UsersSignup)
-	router.Post("/signin", handlers.UsersSignin)
-	router.Get("/signout", handlers.UsersSignout)
-```
